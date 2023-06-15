@@ -10,7 +10,7 @@ function Product({product}) {
         <Card.Img variant='top' src={product.image}></Card.Img>
       </Link>
       <Card.Body>
-        <Card.Title>
+        <Card.Title className='text-truncate'>
           <strong>{product.name}</strong>
         </Card.Title>
         <Card.Subtitle>{product.brand}</Card.Subtitle>
