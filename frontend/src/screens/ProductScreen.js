@@ -39,9 +39,11 @@ function ProductScreen() {
           <Image src={image} fluid rounded />
         </Col>
         <Col sm={12} md={6}>
-          <Card className='p-2'>
-            <Card.Title>{name}</Card.Title>
-            <Card.Subtitle>{brand}</Card.Subtitle>
+          <Card className='p-4'>
+            <Card.Title as='h2'>{name}</Card.Title>
+            <Card.Subtitle className='mb-2 text-secondary'>
+              {brand}
+            </Card.Subtitle>
             <Card.Text>{description}</Card.Text>
             <ListGroup variant='flush'>
               <ListGroupItem>{category}</ListGroupItem>
