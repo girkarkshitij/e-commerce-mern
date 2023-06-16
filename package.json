@@ -67,5 +67,9 @@
     "start": "node backend/server.js"
   },
   "author": "Kshitij Girkar",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "nodemon": "^2.0.22"
+  }
 }
