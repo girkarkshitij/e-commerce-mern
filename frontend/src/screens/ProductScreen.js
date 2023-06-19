@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 import {useParams} from 'react-router-dom';
-import products from '../products';
 import {
   Button,
   Card,
@@ -16,7 +16,25 @@ import Rating from '../components/Rating';
 
 function ProductScreen() {
   const {id} = useParams();
-  const product = products.find((product) => product._id === Number(id));
+
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const response = await axios.get(`/api/products/${id}`);
+        setProduct(response.data);
+      } catch (error) {
+        console.error('Error', error.message);
+      }
+    }
+    getProduct();
+  }, [id]);
+
+  if (!product) {
+    console.error(`No product with id ${id} found`);
+    return null;
+  }
 
   const {
     image,
