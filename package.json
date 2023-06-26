@@ -69,7 +69,9 @@
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
     "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "import-data": "node backend/seeds.js",
+    "delete-data": "node backend/seeds.js -d"
   },
   "author": "Kshitij Girkar",
   "license": "MIT",
