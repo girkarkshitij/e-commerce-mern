@@ -1,23 +1,34 @@
 import express from 'express'
 const router = express.Router();
-import asyncHandler from '../middleware/asyncHandler.js';
 import Product from '../models/productModel.js';
 
 // /api/products is defined in server.js
 
-router.get('/', asyncHandler(async (req, res) => {
-  const products = await Product.find({});
-  res.json(products);
-}));
+router.get('/', async (req, res) => {
+  try {
+    const products = await Product.find({});
+    res.json(products);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
 
-router.get('/:id', asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+router.get('/:id', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
 
-  if (product) {
+    if (!product) {
+      res.status(404).send('Product not found');
+    }
     return res.json(product);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
   }
 
+
   res.status(404).json({message: 'Product not found'})
-}));
+});
 
 export default router;
