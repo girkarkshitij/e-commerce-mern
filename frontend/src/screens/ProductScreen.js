@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   Button,
   Card,
@@ -36,6 +36,11 @@ function ProductScreen() {
 
   return (
     <Container>
+      <Link to="/">
+        <Button className="mt-2" variant="secondary">
+          Back
+        </Button>
+      </Link>
       {isLoading ? (
         <Loader />
       ) : error ? (
