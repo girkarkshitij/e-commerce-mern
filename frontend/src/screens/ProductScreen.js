@@ -11,6 +11,8 @@ import {
   Badge,
 } from "react-bootstrap";
 import Rating from "../components/Rating";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
 
 function ProductScreen() {
@@ -21,9 +23,12 @@ function ProductScreen() {
   return (
     <Container>
       {isLoading ? (
-        <h2>Loading</h2>
+        <Loader />
       ) : error ? (
-        <div>{error?.data?.message || error.error}</div>
+        <Message
+          variant="danger"
+          text={error?.data?.message || error?.error}
+        ></Message>
       ) : (
         <Row className="p-4">
           <Col sm={12} md={6}>
