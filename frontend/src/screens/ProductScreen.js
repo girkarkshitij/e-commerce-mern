@@ -1,6 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
-import {useParams} from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import {
   Button,
   Card,
@@ -11,81 +9,61 @@ import {
   ListGroup,
   ListGroupItem,
   Badge,
-} from 'react-bootstrap';
-import Rating from '../components/Rating';
+} from "react-bootstrap";
+import Rating from "../components/Rating";
+import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
 
 function ProductScreen() {
-  const {id} = useParams();
+  const { id } = useParams();
 
-  const [product, setProduct] = useState(null);
-
-  useEffect(() => {
-    const getProduct = async () => {
-      try {
-        const response = await axios.get(`/api/products/${id}`);
-        setProduct(response.data);
-      } catch (error) {
-        console.error('Error', error.message);
-      }
-    }
-    getProduct();
-  }, [id]);
-
-  if (!product) {
-    console.error(`No product with id ${id} found`);
-    return null;
-  }
-
-  const {
-    image,
-    brand,
-    description,
-    name,
-    category,
-    price,
-    countInStock,
-    rating,
-    numReviews,
-  } = product;
-
-  const stockIsAvailable = countInStock > 0 ? true : false;
+  const { data: product, isLoading, error } = useGetProductDetailsQuery(id);
 
   return (
     <Container>
-      <Row className='p-4'>
-        <Col sm={12} md={6}>
-          <Image src={image} fluid rounded />
-        </Col>
-        <Col sm={12} md={6}>
-          <Card className='p-4'>
-            <Card.Title as='h2'>{name}</Card.Title>
-            <Card.Subtitle className='mb-2 text-secondary'>
-              {brand}
-            </Card.Subtitle>
-            <Card.Text>{description}</Card.Text>
-            <ListGroup variant='flush'>
-              <ListGroupItem>{category}</ListGroupItem>
-              <ListGroupItem>
-                <Rating
-                  ratingValue={rating}
-                  ratingText={`${numReviews} reviews`}
-                />
-              </ListGroupItem>
-              <ListGroupItem>${price}</ListGroupItem>
-              <ListGroupItem>
-                {stockIsAvailable ? (
-                  <Badge bg='success'>In stock</Badge>
-                ) : (
-                  <Badge bg='secondary'>Out of stock</Badge>
-                )}
-              </ListGroupItem>
-            </ListGroup>
-            <Button className='m-3' size='lg' disabled={!stockIsAvailable}>
-              Buy
-            </Button>
-          </Card>
-        </Col>
-      </Row>
+      {isLoading ? (
+        <h2>Loading</h2>
+      ) : error ? (
+        <div>{error?.data?.message || error.error}</div>
+      ) : (
+        <Row className="p-4">
+          <Col sm={12} md={6}>
+            <Image src={product.image} fluid rounded />
+          </Col>
+          <Col sm={12} md={6}>
+            <Card className="p-4">
+              <Card.Title as="h2">{product.name}</Card.Title>
+              <Card.Subtitle className="mb-2 text-secondary">
+                {product.brand}
+              </Card.Subtitle>
+              <Card.Text>{product.description}</Card.Text>
+              <ListGroup variant="flush">
+                <ListGroupItem>{product.category}</ListGroupItem>
+                <ListGroupItem>
+                  <Rating
+                    ratingValue={product.rating}
+                    ratingText={`${product.numReviews} reviews`}
+                  />
+                </ListGroupItem>
+                <ListGroupItem>${product.price}</ListGroupItem>
+                <ListGroupItem>
+                  {product.countInStock > 0 ? (
+                    <Badge bg="success">In stock</Badge>
+                  ) : (
+                    <Badge bg="secondary">Out of stock</Badge>
+                  )}
+                </ListGroupItem>
+              </ListGroup>
+              <Button
+                className="m-3"
+                size="lg"
+                disabled={product.countInStock <= 0}
+              >
+                Buy
+              </Button>
+            </Card>
+          </Col>
+        </Row>
+      )}
     </Container>
   );
 }
