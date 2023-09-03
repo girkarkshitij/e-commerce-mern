@@ -4,6 +4,7 @@ import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
+import { protect } from "../middleware/authMiddleware.js";
 
 // /api/users is defined in server.js
 
@@ -44,21 +45,23 @@ router.post("/", async (req, res) => {
 // @desc    Logout user / clear token
 // @route   POST /api/users/logout
 // @access  Private
-router.post("/logout", async (req, res) => {
-  res.send("logout user");
+router.post("/logout", protect, async (req, res) => {
+  res.cookie("jwt", "", { httpOnly: true, expires: new Date(0) });
+
+  res.status(200).json({ msg: "Logged out successfully" });
 });
 
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private
-router.get("/profile", async (req, res) => {
+router.get("/profile", protect, async (req, res) => {
   res.send("get user profile");
 });
 
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
-router.put("/profile", async (req, res) => {
+router.put("/profile", protect, async (req, res) => {
   res.send("update user profile");
 });
 
