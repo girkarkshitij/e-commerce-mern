@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 dotenv.config();
 import connectDB from "./config/db.js";
@@ -11,6 +12,9 @@ connectDB();
 // body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// cookie parser middleware
+app.use(cookieParser());
 
 const PORT = process.env.PORT || 5000;
 
