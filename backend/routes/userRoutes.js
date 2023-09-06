@@ -79,7 +79,6 @@ router.post("/", async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
-      password: user.password,
     });
   } else {
     res.status(400).json({ msg: "Invalid user data" });
