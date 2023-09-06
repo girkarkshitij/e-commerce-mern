@@ -4,6 +4,7 @@ import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
+import bcrypt from "bcryptjs";
 import { protect } from "../middleware/authMiddleware.js";
 
 // /api/users is defined in server.js
@@ -15,6 +16,11 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email: email });
+
+  if (!user) {
+    res.status(401).json({ msg: "Invalid email or password" });
+    return;
+  }
 
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
     expiresIn: "30d",
@@ -39,7 +45,45 @@ router.post("/login", async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 router.post("/", async (req, res) => {
-  res.send("register user");
+  const { name, email, password } = req.body;
+
+  let user = await User.findOne({ email });
+
+  if (user) {
+    res.status(400).json({ msg: "User already exists" });
+    return;
+  }
+
+  user = new User({ name, email, password });
+
+  const salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(password, salt);
+
+  await user.save();
+
+  if (user) {
+    // geneate token after register
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "30d",
+    });
+
+    // set jwt as http-only cookie
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV != "development",
+      sameSite: "strict",
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    });
+
+    res.status(201).json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+    });
+  } else {
+    res.status(400).json({ msg: "Invalid user data" });
+  }
 });
 
 // @desc    Logout user / clear token
