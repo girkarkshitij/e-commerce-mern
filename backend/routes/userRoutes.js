@@ -115,7 +115,26 @@ router.get("/profile", protect, async (req, res) => {
 // @route   PUT /api/users/profile
 // @access  Private
 router.put("/profile", protect, async (req, res) => {
-  res.send("update user profile");
+  let user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    let updatedUser = await user.save();
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+    });
+  } else {
+    res.status(404).json({ msg: "User not found" });
+  }
 });
 
 export default router;
