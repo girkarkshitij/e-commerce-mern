@@ -5,11 +5,11 @@ import Product from "../models/productModel.js";
 // /api/products is defined in server.js
 
 router.get("/", async (req, res) => {
-  try {
-    const products = await Product.find({});
-    res.json(products);
-  } catch (error) {
-    console.error(error.message);
+  let products = await Product.find({});
+
+  if (products) {
+    res.status(200).json(products);
+  } else {
     res.status(500).json({ msg: "Server Error" });
   }
 });
