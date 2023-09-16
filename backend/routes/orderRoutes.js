@@ -9,7 +9,7 @@ import { protect } from "../middleware/authMiddleware.js";
 // @route   POST /api/orders
 // @access  Private
 router.post("/", protect, async (req, res) => {
-  const { orderItems, shippingAddregss, paymentMethod, totalPrice } = req.body;
+  const { orderItems, shippingAddress, paymentMethod, totalPrice } = req.body;
 
   if (orderItems && orderItems.length === 0) {
     res.status(400).json({ msg: "No order items" });
@@ -21,7 +21,7 @@ router.post("/", protect, async (req, res) => {
         _id: undefined,
       })),
       user: req.user._id,
-      shippingAddregss,
+      shippingAddress,
       paymentMethod,
       totalPrice,
     });
@@ -38,6 +38,22 @@ router.post("/", protect, async (req, res) => {
 router.get("/mine", protect, async (req, res) => {
   const orders = await Order.find({ user: req.user._id });
   res.status(200).json(orders);
+});
+
+// @desc    Get order by id
+// @route   GET /api/orders/:id
+// @access  Private
+router.get("/:id", protect, async (req, res) => {
+  const order = await Order.findById(req.params.id).populate(
+    "user",
+    "name email"
+  );
+
+  if (order) {
+    res.json(order);
+  } else {
+    res.status(404).json({ msg: "order not found" });
+  }
 });
 
 // @desc    Update order as paid
