@@ -27,11 +27,11 @@ if (process.env.NODE_ENV === "production") {
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
   });
+} else {
+  app.get("/", (req, res) => {
+    res.send("Server is now running...");
+  });
 }
-
-app.get("/", (req, res) => {
-  res.send("Server is now running...");
-});
 
 app.use("/api/products", productRoutes);
 
@@ -40,5 +40,5 @@ app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 
 app.listen(PORT, () => {
-  console.log("Backend is listening on" + PORT);
+  console.log("Server running in ${process.env.NODE_ENV} mode on " + PORT);
 });
