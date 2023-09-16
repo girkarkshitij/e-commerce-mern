@@ -73,7 +73,8 @@
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "import-data": "node backend/seeds.js",
-    "delete-data": "node backend/seeds.js -d"
+    "delete-data": "node backend/seeds.js -d",
+    "build":"npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "Kshitij Girkar",
   "license": "MIT",
