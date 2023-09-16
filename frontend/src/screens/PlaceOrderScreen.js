@@ -66,7 +66,7 @@ function PlaceOrderScreen() {
             <ListGroup.Item>
               <h2>Order Items</h2>
               {cart.cartItems.length === 0 ? (
-                <Message>Your cart is empty</Message>
+                <Message text="Your cart is empty" />
               ) : (
                 <ListGroup variant="flush">
                   {cart.cartItems.map((item, index) => (
@@ -110,7 +110,7 @@ function PlaceOrderScreen() {
               </ListGroup.Item>
 
               <ListGroup.Item>
-                {error && <Message variant="danger">{error}</Message>}
+                {error && <Message variant="danger" text={error} />}
               </ListGroup.Item>
 
               <ListGroup.Item>
