@@ -40,5 +40,5 @@ app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 
 app.listen(PORT, () => {
-  console.log("Server running in ${process.env.NODE_ENV} mode on " + PORT);
+  console.log(`Server running in ${process.env.NODE_ENV} mode on ${PORT}`);
 });
