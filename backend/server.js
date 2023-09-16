@@ -18,6 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 // cookie parser middleware
 app.use(cookieParser());
 
+const PORT = process.env.PORT || 5000;
+
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.resolve();
   app.use(express.static(path.join(__dirname, "/frontend/build")));
@@ -26,8 +28,6 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
   });
 }
-
-const PORT = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
   res.send("Server is now running...");
