@@ -9,7 +9,7 @@ import { protect } from "../middleware/authMiddleware.js";
 // @route   POST /api/orders
 // @access  Private
 router.post("/", protect, async (req, res) => {
-  const { orderItems, shippingAddregss, paymentMethod, totalPrice } = req.body;
+  const { orderItems, shippingAddress, paymentMethod, totalPrice } = req.body;
 
   if (orderItems && orderItems.length === 0) {
     res.status(400).json({ msg: "No order items" });
@@ -21,7 +21,7 @@ router.post("/", protect, async (req, res) => {
         _id: undefined,
       })),
       user: req.user._id,
-      shippingAddregss,
+      shippingAddress,
       paymentMethod,
       totalPrice,
     });
