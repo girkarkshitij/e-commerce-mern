@@ -1,34 +1,33 @@
-import express from 'express'
+import express from "express";
 const router = express.Router();
-import Product from '../models/productModel.js';
+import Product from "../models/productModel.js";
 
 // /api/products is defined in server.js
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const products = await Product.find({});
     res.json(products);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ msg: "Server Error" });
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
     if (!product) {
-      res.status(404).send('Product not found');
+      res.status(404).json({ msg: "Product not found" });
     }
     return res.json(product);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ msg: "Server Error" });
   }
 
-
-  res.status(404).json({message: 'Product not found'})
+  res.status(404).json({ msg: "Product not found" });
 });
 
 export default router;
