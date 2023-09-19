@@ -62,7 +62,7 @@ router.post("/", async (req, res) => {
   await user.save();
 
   if (user) {
-    // geneate token after register
+    // generate token after register
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "30d",
     });
@@ -123,17 +123,34 @@ router.put("/profile", protect, async (req, res) => {
 
     if (req.body.password) {
       user.password = req.body.password;
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(user.password, salt);
     }
 
     let updatedUser = await user.save();
 
-    res.status(200).json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-    });
-  } else {
-    res.status(404).json({ msg: "User not found" });
+    if (updatedUser) {
+      // generate token after update
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "30d",
+      });
+
+      // set jwt as http-only cookie
+      res.cookie("jwt", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV != "development",
+        sameSite: "strict",
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      });
+
+      res.status(200).json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+      });
+    } else {
+      res.status(400).json({ msg: "Update process failed" });
+    }
   }
 });
 

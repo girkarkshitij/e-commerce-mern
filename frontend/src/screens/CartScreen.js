@@ -35,7 +35,6 @@ const CartScreen = () => {
     navigate("/login?redirect=/shipping");
   };
 
-  console.log(cart);
   return (
     <Row style={{ marginTop: "4px", marginBottom: "8px" }}>
       <Col md={8}>
