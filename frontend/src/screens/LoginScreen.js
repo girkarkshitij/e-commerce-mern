@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Alert } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -48,6 +48,10 @@ function LoginScreen() {
   return (
     <FormContainer>
       <h1>Sign In</h1>
+
+      <Alert>
+        a@b.com<br></br>12345678
+      </Alert>
 
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="email" className="my-3">
